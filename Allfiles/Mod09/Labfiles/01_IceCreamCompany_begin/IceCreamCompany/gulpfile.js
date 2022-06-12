@@ -1,70 +1,101 @@
-﻿$(function() {
-    UnableToPurchase();
+var gulp = require('gulp');
+var concat = require('gulp-concat');
+var uglify = require('gulp-uglify');
+var sass = require('gulp-sass');
+var cssmin = require('gulp-cssmin');
 
-    $('.form-control').click(function() {
-        var hashtable = {};
-        hashtable['Select'] = '0';
-        hashtable['Vanilla Ice Cream with Caramel Ripple and Almonds'] = '5';
-        hashtable['Vanilla Ice Cream with Cherry Dark Chocolate Ice Cream'] = '7';
-        hashtable['Vanilla Ice Cream with Pistachio'] = '4.5';
+var paths = {
+    webroot: "./wwwroot/",
+    nodeModules: "./node_modules/"
+};
 
-        var hashtableImages = {};
-        hashtableImages['Select'] = '0';
-        hashtableImages['Vanilla Ice Cream with Caramel Ripple and Almonds'] = 'icecream-1.jpg';
-        hashtableImages['Vanilla Ice Cream with Cherry Dark Chocolate Ice Cream'] = 'icecream-2.jpg';
-        hashtableImages['Vanilla Ice Cream with Pistachio'] = 'icecream-3.jpg';
-
-        var iceCreanQuantity = parseFloat($("#quantity").val());
-        var iceCreamFlavor = $("#flavor").val();
-        var priceperweight = parseFloat(hashtable[iceCreamFlavor]);
-        var iceCreamImage = hashtableImages[iceCreamFlavor];
-        var calc = (iceCreanQuantity * priceperweight);
-
-        if (calc && iceCreamImage !== 0) {
-            $('#totalAmount').html(calc + '$');
-            var src = '/images/' + iceCreamImage;
-            $("#iceCreamImage").attr("src", src);
-            $("#formButton").removeAttr('disabled');
-        } else {
-            UnableToPurchase();
-        }
-    });
-
-    function UnableToPurchase() {
-        $('#totalAmount').html('');
-        $("#iceCreamImage").attr("src", '/images/empty.jpg');
-        $("#formButton").attr('disabled', 'disabled');
-    }
+paths.jqueryjs = paths.nodeModules + "jquery/dist/jquery.js";
+paths.popperjs = paths.nodeModules + "popper.js/dist/umd/popper.js";
+paths.bootstrapjs = paths.nodeModules + "bootstrap/dist/js/bootstrap.js";
+paths.vendorjs = [paths.jqueryjs, paths.popperjs, paths.bootstrapjs];
+paths.destinationjsFolder = paths.webroot + "scripts/";
+paths.vendorjsFileName = "vendor.min.js";
+paths.jsFiles = "./Scripts/*.js";
+paths.jsFileName = "script.min.js";
+paths.sassFiles = "./Styles/*.scss";
+paths.compiledCssFileName = "main.min.css";
+paths.destinationCssFolder = paths.webroot + "css/";
+paths.bootstrapCss = paths.nodeModules + "bootstrap/dist/css/bootstrap.css";
+paths.vendorCssFileName = "vendor.min.css";
+ 
+gulp.task("copy-js-file", function() {
+    return gulp.src(paths.jqueryjs)
+        .pipe(gulp.dest(paths.destinationjsFolder));
 });
+
+gulp.task("min-vendor:js", function() {
+    return gulp.src(paths.vendorjs)
+        .pipe(concat(paths.vendorjsFileName))
+        .pipe(uglify())
+        .pipe(gulp.dest(paths.destinationjsFolder));
+});
+
+gulp.task("min:js", function() {
+    return gulp.src(paths.jsFiles)
+        .pipe(concat(paths.jsFileName))
+        .pipe(uglify())
+        .pipe(gulp.dest(paths.destinationjsFolder));
+});
+
+gulp.task("min:scss", function() {
+    return gulp.src(paths.sassFiles)
+        .pipe(sass().on('error', sass.logError))
+        .pipe(concat(paths.compiledCssFileName))
+        .pipe(cssmin())
+        .pipe(gulp.dest(paths.destinationCssFolder));
+});
+
+gulp.task("min-vendor:css", function() {
+    return gulp.src(paths.bootstrapCss)
+        .pipe(concat(paths.vendorCssFileName))
+        .pipe(cssmin())
+        .pipe(gulp.dest(paths.destinationCssFolder));
+});
+
+gulp.task("js-watcher", function() {
+    gulp.watch('./Scripts/*.js', gulp.series("min:js"));
+});
+
+gulp.task("sass-watcher", function() {
+    gulp.watch('./Styles/*.scss', gulp.series("min:scss"));
+});
+
+
+
 
 // SIG // Begin signature block
 // SIG // MIIdjAYJKoZIhvcNAQcCoIIdfTCCHXkCAQExCzAJBgUr
 // SIG // DgMCGgUAMGcGCisGAQQBgjcCAQSgWTBXMDIGCisGAQQB
 // SIG // gjcCAR4wJAIBAQQQEODJBs441BGiowAQS9NQkAIBAAIB
-// SIG // AAIBAAIBAAIBADAhMAkGBSsOAwIaBQAEFDf3KGMeR7Vz
-// SIG // 5odp4TILl7PDP8dNoIIYajCCBNowggPCoAMCAQICEzMA
-// SIG // AAEhTrIDTT8kaTYAAAAAASEwDQYJKoZIhvcNAQEFBQAw
+// SIG // AAIBAAIBAAIBADAhMAkGBSsOAwIaBQAEFBa0zib5AzoK
+// SIG // KuoXy/CB2BrfgvqRoIIYajCCBNowggPCoAMCAQICEzMA
+// SIG // AAEiJ+9r7eL7oKMAAAAAASIwDQYJKoZIhvcNAQEFBQAw
 // SIG // dzELMAkGA1UEBhMCVVMxEzARBgNVBAgTCldhc2hpbmd0
 // SIG // b24xEDAOBgNVBAcTB1JlZG1vbmQxHjAcBgNVBAoTFU1p
 // SIG // Y3Jvc29mdCBDb3Jwb3JhdGlvbjEhMB8GA1UEAxMYTWlj
 // SIG // cm9zb2Z0IFRpbWUtU3RhbXAgUENBMB4XDTE4MTAyNDIx
-// SIG // MDczOVoXDTIwMDExMDIxMDczOVowgcoxCzAJBgNVBAYT
+// SIG // MDc0MFoXDTIwMDExMDIxMDc0MFowgcoxCzAJBgNVBAYT
 // SIG // AlVTMRMwEQYDVQQIEwpXYXNoaW5ndG9uMRAwDgYDVQQH
 // SIG // EwdSZWRtb25kMR4wHAYDVQQKExVNaWNyb3NvZnQgQ29y
 // SIG // cG9yYXRpb24xJTAjBgNVBAsTHE1pY3Jvc29mdCBBbWVy
 // SIG // aWNhIE9wZXJhdGlvbnMxJjAkBgNVBAsTHVRoYWxlcyBU
-// SIG // U1MgRVNOOjhBODItRTM0Ri05RERBMSUwIwYDVQQDExxN
+// SIG // U1MgRVNOOkVBQ0UtRTMxNi1DOTFEMSUwIwYDVQQDExxN
 // SIG // aWNyb3NvZnQgVGltZS1TdGFtcCBTZXJ2aWNlMIIBIjAN
-// SIG // BgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA8OAL4/+m
-// SIG // +qXuRcEvrHz2MGcuQv4zw6QkHzgDDoo5hqbuk+xFaVf2
-// SIG // xo15JQRRJ/sSwIXeDqDS6Yf42Vwnsc3KHLtdqKeaJUZJ
-// SIG // CMs72WeHlyb21Qg+eCYdBOa/ht/S5n++6gjS/4OAZrVB
-// SIG // eic7rea/dV65LzTFfFGGA5MgE+aAL3j67msBrqx47Fvx
-// SIG // Q9lXMp14BFgOpr0fBG7W2e8pccqFMiEop2Efw5wBmSBp
-// SIG // j/TEqjDohqRi8EXFur88rE+qJ5096IHTheYC0/moSfoO
-// SIG // tKetFavQukn5I3uwvXZO3/9Ces071tYWFeeKow7FywZf
-// SIG // hyAG1baJXmvkn0aHVxFFfIZbfQIDAQABo4IBCTCCAQUw
-// SIG // HQYDVR0OBBYEFHGevhS+zas6s3KOm7NHXnUhRcIuMB8G
+// SIG // BgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0VNLh699
+// SIG // Fy8z9KGU1u3wnbJW+jl00HqAmvyKas04A3F8nxKiNH3b
+// SIG // 4bakPOJ3mROL8CVAGydkvmoyYq882SBFPyYk2aSYHngD
+// SIG // LTfjLgG8163ckqIclA7hpLjfr1UngpxGZHhnBX/86zVl
+// SIG // l5kuybFStgSUfGL15NLAVG1laXY9Lr8+vGPh1MsfACih
+// SIG // Npx0bueH+nwuHosD/4bPi+zXoyZvrDaOx11eGOnnUCN+
+// SIG // hXWNEqLavOy4d1PelODul/XA9Iqisa+JcWGJIffAM1VI
+// SIG // 4oknVlLeuQwDG3YwVenHqWrcFVaBExLTSv3/N2zEt7Di
+// SIG // 9NEDFqMkDNRe/ny6M9Uxe6paMwIDAQABo4IBCTCCAQUw
+// SIG // HQYDVR0OBBYEFLZRVZZJFCrl57hdyWcXw5R7NqWmMB8G
 // SIG // A1UdIwQYMBaAFCM0+NlSRnAK7UD7dvuzK7DDNbMPMFQG
 // SIG // A1UdHwRNMEswSaBHoEWGQ2h0dHA6Ly9jcmwubWljcm9z
 // SIG // b2Z0LmNvbS9wa2kvY3JsL3Byb2R1Y3RzL01pY3Jvc29m
@@ -72,15 +103,15 @@
 // SIG // MEgGCCsGAQUFBzAChjxodHRwOi8vd3d3Lm1pY3Jvc29m
 // SIG // dC5jb20vcGtpL2NlcnRzL01pY3Jvc29mdFRpbWVTdGFt
 // SIG // cFBDQS5jcnQwEwYDVR0lBAwwCgYIKwYBBQUHAwgwDQYJ
-// SIG // KoZIhvcNAQEFBQADggEBAJm4QdJYOju+gNVM+/p9BVw5
-// SIG // xJXv3jPyYjz5O6TV4qZviA2nFXZaYlG3WszDCDiJGUwM
-// SIG // c1kmXM24JGrXyoS56AP7bSHwa8x9iV6aOAQpZp4YuYnG
-// SIG // BuhDO5kKZSTuvq42ybEtTI0930nEIQEJ7/chHQZoN1WG
-// SIG // rkrllooUrnW3hk7XZIYn4JTcEd5aP6pzH+cu0N+YE6U+
-// SIG // +QjCu8vSAPmSydTBrSxLTVoRiSlbm8m8osl1YYg93mwj
-// SIG // rjAA+U4wDpZ4fclP9WbwT/Ohwry4cVeNV9kD08VbHfaG
-// SIG // joX1ybzJpC7nvp265kt1U37hdu/O9Hv2S1MUmLjmNIch
-// SIG // 3TR8gpHX7LowggX/MIID56ADAgECAhMzAAABA14lHJkf
+// SIG // KoZIhvcNAQEFBQADggEBAGZXbHe7444uVN9GY3Coib4Q
+// SIG // 7XJsdG+LOLNBO4HfC6eFZ7wEAJ6XN0pJJ1LJcpJ7xxhO
+// SIG // +zkncSnazvKp509E8pqr3+/0XtsSXEVXDOH/E3hOYQmn
+// SIG // 3wpAexrbvdEfuvhG9QZwQ2DG492+NiavCuNoZwxtJ7a4
+// SIG // L+P05siViL5hkDkVjAlsjPza2mNy3Yu6Q6U38fWfbOHj
+// SIG // RP3MYqaEk1xzCID4A4G2XLhQQDZ1sBfv7MI+vXL/O8fi
+// SIG // b//BzPzWqGsK6/PtMg44ifdDsyxiOUUnLhn0FJR9BEm8
+// SIG // 3rzv/TxaaFMsJjWIR6BD54CyVU9lustd4xVMdyEvZZ0d
+// SIG // K9XQoZspwfIwggX/MIID56ADAgECAhMzAAABA14lHJkf
 // SIG // ox64AAAAAAEDMA0GCSqGSIb3DQEBCwUAMH4xCzAJBgNV
 // SIG // BAYTAlVTMRMwEQYDVQQIEwpXYXNoaW5ndG9uMRAwDgYD
 // SIG // VQQHEwdSZWRtb25kMR4wHAYDVQQKExVNaWNyb3NvZnQg
@@ -239,33 +270,33 @@
 // SIG // QSAyMDExAhMzAAABA14lHJkfox64AAAAAAEDMAkGBSsO
 // SIG // AwIaBQCggaIwGQYJKoZIhvcNAQkDMQwGCisGAQQBgjcC
 // SIG // AQQwHAYKKwYBBAGCNwIBCzEOMAwGCisGAQQBgjcCARUw
-// SIG // IwYJKoZIhvcNAQkEMRYEFJpwsluC1L944uow9OPfk7Z4
-// SIG // nra6MEIGCisGAQQBgjcCAQwxNDAyoBSAEgBNAGkAYwBy
+// SIG // IwYJKoZIhvcNAQkEMRYEFOxH4qGddH35YgpGKo7/cH2C
+// SIG // vqHqMEIGCisGAQQBgjcCAQwxNDAyoBSAEgBNAGkAYwBy
 // SIG // AG8AcwBvAGYAdKEagBhodHRwOi8vd3d3Lm1pY3Jvc29m
-// SIG // dC5jb20wDQYJKoZIhvcNAQEBBQAEggEAG1+1DZCxK0Qe
-// SIG // N0TnYNLuWs7qaVd4/xroxFnN28MkSVM80bo1zEPqCF3/
-// SIG // YKc3so1E+AL/ZG4fPKZucvLaCWCon7v8NR/jCjSFFlZs
-// SIG // EGMmlJ4XW0hGTOxIesNCVVpQaHyhwwpC72E6nMa6uC7b
-// SIG // pXKB8jdpXrnsJF8viqa5ZQtsQWpshKkmTH4eIYezJSNQ
-// SIG // /rDSMrMpPhboNiEO7jH0OPXHz1J2kcOGAIl1oUx+QO/K
-// SIG // PtHtnCTr9Omsqluzg38GuekBTwtqn4rk0bhKRdpPlKkI
-// SIG // zWWXoFbYCX7KWuOYw+YjZ9JXzljwPmS1RxpHaKb8qYdy
-// SIG // sUjl8uneke/0d7e1FjV32aGCAigwggIkBgkqhkiG9w0B
+// SIG // dC5jb20wDQYJKoZIhvcNAQEBBQAEggEAOlaPzBGws/HW
+// SIG // sz9ygHXn73zClnZ75CV5V/C6BkIRxgoyUsLd+Aat8XDy
+// SIG // LvlB4Z6oyXZfThLIWfS/nOJNwHjXUKqTqkf2kQucp7S2
+// SIG // Si3+DmVNggYh/FbVFiJrARvk64PB2VYV65KUrPFwaJaO
+// SIG // llh6are62TRWyNlf38GZGNeIsJgu50gvbZ2ROGqfP2lY
+// SIG // yLvOzpeOIh9DmkdxtZMkfm4C/UWWe4iUcJWJgPv0t6kg
+// SIG // MyvaGbLFSQsIk861y19CUJrJikAiDhcjrynX/95kq1Z9
+// SIG // lxZnv3TYopTteFRsr38gLYrf4agGTZbQASPRJTTzLb1c
+// SIG // /Kev7d7YxZ4Qloc/XQEAP6GCAigwggIkBgkqhkiG9w0B
 // SIG // CQYxggIVMIICEQIBATCBjjB3MQswCQYDVQQGEwJVUzET
 // SIG // MBEGA1UECBMKV2FzaGluZ3RvbjEQMA4GA1UEBxMHUmVk
 // SIG // bW9uZDEeMBwGA1UEChMVTWljcm9zb2Z0IENvcnBvcmF0
 // SIG // aW9uMSEwHwYDVQQDExhNaWNyb3NvZnQgVGltZS1TdGFt
-// SIG // cCBQQ0ECEzMAAAEhTrIDTT8kaTYAAAAAASEwCQYFKw4D
+// SIG // cCBQQ0ECEzMAAAEiJ+9r7eL7oKMAAAAAASIwCQYFKw4D
 // SIG // AhoFAKBdMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEw
-// SIG // HAYJKoZIhvcNAQkFMQ8XDTE5MDIyNzA5MTQxOFowIwYJ
-// SIG // KoZIhvcNAQkEMRYEFAyl3izkIimO5N41PJrbcoxJJCmw
-// SIG // MA0GCSqGSIb3DQEBBQUABIIBABmJ7sbZ37OVYLgSU/gI
-// SIG // UjX6rbZdHYSJub/ZkVs3m6efnbtlaDjPxCPd0Rzqxuag
-// SIG // gPArlwqFXnjSKwNuiqjvXR/wB3P93tBC9jpf57j3eSJ7
-// SIG // TKsE7iSXozpO6j1nuMXcgSkZAyqZYrI15uAisG6mC+hS
-// SIG // WijLbyZzYznHZfKqDmKxbpkYqKQD5SWBnxB1hPd9VyoS
-// SIG // DYYMveY7k47920xeJMbK6yMwOd1x9aOJXxhiVcRm55WS
-// SIG // /HjKkIspmjpKhMhkm+u1Ke/Xkc8IifBVJXps2d1/270C
-// SIG // piAhmYXIk2QXX2D2b4xeHBcGFzmJOwHhzbdvtZBrmhSi
-// SIG // WfHwsu+DBd/1f68=
+// SIG // HAYJKoZIhvcNAQkFMQ8XDTE5MDIyNzA5MTQxN1owIwYJ
+// SIG // KoZIhvcNAQkEMRYEFEzE9p5652dgkN9hGUFgUH+NOz8Z
+// SIG // MA0GCSqGSIb3DQEBBQUABIIBAJ+LnDxZXUFRq66xt+gS
+// SIG // nsz8lnF9rkG3btNDlozUcz7UICAZGn5DyE34GanQQ85e
+// SIG // jcqq3OYbpa5bCoV/qOhbCCURe7Ut0YdIjqxKeXXDJ8L8
+// SIG // eMccWa3FOUY162VsPLK8c+AjD2f+RbKNP6o6ZKJZ1Hjf
+// SIG // XcHqaFR8bfrf1GXC7grVp03E4A/4pL7PwsEJ7zPpCGjx
+// SIG // nLUgx9EZ4Kwx+auxb+8B2oMG6HCnfB0bdgCXloVo7Wr8
+// SIG // CW7R7zt9er2f/zMHPjWKOHLNGO+ZGXs5CzxVe5qZ6eV1
+// SIG // VtrbOA/OH7mmWdO5WEL37qC5dcmjeWbcjdRSKWKRqXb5
+// SIG // 2QPnxwBff4p0Qfc=
 // SIG // End signature block
