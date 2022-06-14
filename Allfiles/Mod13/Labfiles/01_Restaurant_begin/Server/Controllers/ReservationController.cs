@@ -11,33 +11,33 @@ namespace Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class JobController : ControllerBase
+    public class ReservationController : ControllerBase
     {
         private RestaurantContext _context;
 
-        public JobController(RestaurantContext context)
+        public ReservationController(RestaurantContext context)
         {
             _context = context;
         }
 
-        [HttpGet("{id}")]
-        public ActionResult<JobApplication> GetById(int id)
+        [HttpGet("{id:int}")]
+        public ActionResult<OrderTable> GetById(int id)
         {
-            var apply = _context.JobApplications.FirstOrDefault(p => p.Id == id);
-            if (apply == null)
+            var order = _context.ReservationsTables.FirstOrDefault(p => p.Id == id);
+            if (order == null)
             {
                 return NotFound();
             }
 
-            return apply;
+            return order;
         }
 
         [HttpPost]
-        public ActionResult<JobApplication> Create(JobApplication jobApplication)
+        public ActionResult<OrderTable> Create(OrderTable orderTable)
         {
-            _context.Add(jobApplication);
+            _context.Add(orderTable);
             _context.SaveChanges();
-            return CreatedAtAction(nameof(GetById), new { id = jobApplication.Id }, jobApplication);
+            return CreatedAtAction(nameof(GetById), new { id = orderTable.Id }, orderTable);
         }
     }
 }
