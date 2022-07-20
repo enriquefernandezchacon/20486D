@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace ActorsRazorPages.Models
+﻿namespace ActorsRazorPages.Models
 {
     public interface IData
     {

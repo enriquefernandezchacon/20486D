@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ActorsRazorPages.Models;
 using System.Collections.Generic;
+using ActorsRazorPages.Models;
 
 namespace ActorsRazorPages.Pages.Actors
 {

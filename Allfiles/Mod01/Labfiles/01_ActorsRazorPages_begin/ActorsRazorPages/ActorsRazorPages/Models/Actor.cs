@@ -6,7 +6,7 @@
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string KnownFor { get; set; }
-        public bool OscarWinner { get; set; }
         public string ImageName { get; set; }
+        public bool OscarWinner { get; set; }
     }
 }

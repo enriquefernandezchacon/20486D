@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.2.32505.173
+VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CakeStoreApi", "CakeStoreApi\CakeStoreApi.csproj", "{1A1A3ED6-7FD9-4AB0-A6C6-B09D64707BB9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CakeStoreApi", "CakeStoreApi\CakeStoreApi.csproj", "{DD897825-C92A-4034-8F74-FD52C33C7EE3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1A1A3ED6-7FD9-4AB0-A6C6-B09D64707BB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1A1A3ED6-7FD9-4AB0-A6C6-B09D64707BB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1A1A3ED6-7FD9-4AB0-A6C6-B09D64707BB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1A1A3ED6-7FD9-4AB0-A6C6-B09D64707BB9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD897825-C92A-4034-8F74-FD52C33C7EE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD897825-C92A-4034-8F74-FD52C33C7EE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD897825-C92A-4034-8F74-FD52C33C7EE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD897825-C92A-4034-8F74-FD52C33C7EE3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {373DD3EE-AE5F-4100-9239-5B282C8123C9}
+		SolutionGuid = {1499FD9D-3613-4EC3-A56D-F0521B4383E8}
 	EndGlobalSection
 EndGlobal
