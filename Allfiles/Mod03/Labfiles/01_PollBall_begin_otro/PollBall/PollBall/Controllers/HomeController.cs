@@ -20,11 +20,13 @@ namespace PollBall.Controllers
             if (Request.Query.ContainsKey("submitted"))
             {
                 StringBuilder results = new StringBuilder();
-                SortedDictionary<SelectedGame, int> votedList = _pollResults.GetVoteResult();
-                foreach (var gameVotes in votedList)
+                SortedDictionary<SelectedGame, int> voteList = _pollResults.GetVoteResult();
+
+                foreach (var gameVotes in voteList)
                 {
                     results.Append($"Game name: {gameVotes.Key}. Votes: {gameVotes.Value}{Environment.NewLine}");
                 }
+
                 return Content(results.ToString());
             }
             else
